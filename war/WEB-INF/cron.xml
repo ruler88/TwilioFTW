@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+  <cron>
+    <url>/dailyUpdate</url>
+    <description>This job updates the trivia question at noon everyday</description>
+    <schedule>every day 12:00</schedule>
+    <timezone>America/Los_Angeles</timezone>
+  </cron>
+</cronentries>
