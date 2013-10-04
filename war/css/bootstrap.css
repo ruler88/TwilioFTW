@@ -450,6 +450,10 @@ cite {
   text-align: center;
 }
 
+p2, .p2 {
+  font-size: 150%;
+}
+
 h1,
 h2,
 h3,

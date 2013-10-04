@@ -4,6 +4,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.kai.twilio.main.DB.User" %>
 <%@ page import="com.kai.twilio.main.DB.Trivia" %>
+<%@ page import="com.kai.twilio.main.DB.Response" %>
 <%@ page import="com.google.appengine.api.datastore.Entity" %>
 <%@ page import="java.text.SimpleDateFormat"%>
 
@@ -11,6 +12,7 @@
 <html lang="en">
     
     <jsp:include page="include/headNav.jsp" />
+
 
     <div class="jumbotron">
       <div class="container">
@@ -22,28 +24,36 @@
 
 
     <div class="container">  
-      <h2>Example of creating Modal with Twitter Bootstrap</h2>  
-      <div class="well">  
-      <a href="#" id="example" class="btn btn-danger" rel="popover" data-content="It's so simple to create a tooltop for my website!" data-original-title="Twitter Bootstrap Popover">hover for popover</a>  
+      <h2>Today's trivia question:</h2>
+
+      <div class="well">
+          <%
+          Entity currentTrivia = Trivia.getCurrentTrivia();
+          pageContext.setAttribute("current_trivia_question", currentTrivia.getProperty("question"));
+          String answerString = "";
+
+          Iterable<Entity> responses = Response.getAllResponses();
+          for(Entity e : responses) {
+            answerString += e.getProperty("answer").toString()+"\n";
+          }
+          if(answerString.isEmpty()) {
+            answerString = "No answer yet :(";
+          }
+          %>
+          <div class="p2">
+            <p>${fn:escapeXml(current_trivia_question)}</p>
+          </div>
+      <a id="example" class="btn btn-danger" rel="popover" trigger="hover" data-content="<%=answerString%>"}>hover to see other people's answers</a>  
       </div>  
      </div> 
 
 
     <div class="container">
-        <div class="row">
-          <div class="col-lg-12">
-              <%
-              Entity currentTrivia = Trivia.getCurrentTrivia();
-              pageContext.setAttribute("current_trivia_question", currentTrivia.getProperty("question"));
-              %>
-
-            <h1>${fn:escapeXml(current_trivia_question)}</h1>
-          </div>
-        </div>
+        
 
         <div class="row">
           <div class="col-lg-12">
-            <h1>Leaderboard</h1>
+            <h2>Leaderboard</h2>
           </div>
         </div>
 
@@ -75,9 +85,19 @@
              
           </tbody>
       </table>
-    
-    
-
     </div><!-- /.container -->
+
+
+    <script src="js/tooltip.js" type="text/javascript"></script>
+    <script src="js/popover.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+      $(function ()  
+      { $("#example").popover({trigger: 'hover'});
+
+      });
+
+    </script>
+
   </body>
 </html>

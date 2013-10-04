@@ -21,6 +21,7 @@ public class Trivia {
 	
 	public static Entity updateCurrentTrivia() {
 		clearCurrentTrivia();
+		Response.clearResponses();
 		Entity currentQuestion = new Entity("CurrentTrivia");
 		
 		Entity randomQuestion = getOneQuestion();

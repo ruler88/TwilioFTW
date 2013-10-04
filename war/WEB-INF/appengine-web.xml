@@ -15,8 +15,7 @@
   
   <static-files>
 	 <include path="css/bootstrap.css" />
-	 <include path="js/bootstrap.js" />
-	 <include path="js/jquery.js" />
+	 <include path="js/*" />
 	 <include path="fonts/*" />
   </static-files>
 
