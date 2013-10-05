@@ -2,62 +2,79 @@ package com.kai.twilio.main;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import com.google.appengine.api.datastore.Entity;
-import com.twilio.sdk.verbs.Message;
-import com.twilio.sdk.verbs.TwiMLException;
-import com.twilio.sdk.verbs.TwiMLResponse;
+import com.kai.twilio.main.DB.Response;
+import com.kai.twilio.main.DB.Trivia;
+import com.kai.twilio.main.DB.User;
+import com.twilio.sdk.TwilioRestClient;
+import com.twilio.sdk.TwilioRestException;
+import com.twilio.sdk.resource.factory.MessageFactory;
+import com.twilio.sdk.resource.instance.Account;
+import com.twilio.sdk.resource.instance.Message;
 
 
 @SuppressWarnings("serial")
 public class TwilioResponseServlet extends HttpServlet {
 	public static final String ACCOUNT_SID = "AC6c1f534804cac1c26dd1de98462b8f8b";
     public static final String AUTH_TOKEN = "4e5764c850f0e637eab5e9e987c252a6";
+    public static final String TWILIO_NUMBER = "+12014904989";
     
 	 public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		 	HashMap<String, String> callers = new HashMap<String, String>();
-	        callers.put("+14158675309", "Curious George");
-	        callers.put("+14158675310", "Boots");
-	        callers.put("+14158675311", "Virgil");
-	        
 	        String fromNumber = request.getParameter("From");
-	        String knownCaller = callers.get(fromNumber);
-	        String message;
-	        if (knownCaller == null) {
-	            // Use a generic message
-	            message = "Monkey, thanks for the message!";
+	        Entity user = User.getUser(fromNumber);
+	        String message = "";
+	        if(user==null) {
+	        	message = "Number not found! Sign up at magicianp0424.appspot.com/addPlayer";
 	        } else {
-	            // Use the caller's name
-	            message = knownCaller + ", thanks for the message!";
+	        	if(Trivia.currentTriviaSolvedStatus()) {
+	        		message = "Sorry, today's question has already been solved!";
+	        	} else {
+	        		String content = request.getParameter("Body");
+		        	Response.addResponse(content);
+		        	if(checkAnswer(content)) {
+		        		message = "You are boss " + user.getProperty("name") + "! \"" + content + "\" is correct!";
+		        		User.increasePoint(fromNumber);
+		        		Trivia.solveCurrentTrivia(user.getProperty("name").toString());
+		        	} else {
+		        		message = "Sorry " + user.getProperty("name") + " your response \"" + 
+		        				content + "\" is incorrect";
+		        	}
+	        	}
 	        }
-	 
-	        // Create a TwiML response and add our friendly message.
-	        TwiMLResponse twiml = new TwiMLResponse();
-	        Message sms = new Message();
-	        sms.set("Message", message);
-	        //sms.setAttribute("Message", message);
+	        
+	        TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN);
+	        Account account = client.getAccount();
+	        
+	        MessageFactory messageFactory = account.getMessageFactory();
+	        List<NameValuePair> params = new ArrayList<NameValuePair>();
+	        params.add(new BasicNameValuePair("To", fromNumber));
+	        params.add(new BasicNameValuePair("From", TWILIO_NUMBER));
+	        params.add(new BasicNameValuePair("Body", message));
 	        try {
-	            twiml.append(sms);
-	        } catch (TwiMLException e) {
-	            e.printStackTrace();
-	        }
-	 
-	        response.setContentType("application/xml");
-	        response.getWriter().print(twiml.toXML());
-			
-	    }
+				Message sms = messageFactory.create(params);
+			} catch (TwilioRestException e) {
+				e.printStackTrace();
+			}
+	 }
   
+	 public boolean checkAnswer(String s) {
+		 Entity currentTrivia = Trivia.getCurrentTrivia();
+		 String correctAnswer = currentTrivia.getProperty("answer").toString().toLowerCase();
+		 if(correctAnswer.equals(s.toLowerCase())) {
+			 return true;
+		 }
+		 return false;
+	 }
 	
 }
 

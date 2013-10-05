@@ -14,7 +14,8 @@
 	          <tr>  
 	            <th>Question</th>  
 	            <th>Answer</th>  
-	            <th>Date</th> 
+	            <th>Date</th>
+	            <th>Solved By</th> 
 	          </tr>  
 	        </thead>
 	        <tbody>  
@@ -24,12 +25,13 @@
 			          pageContext.setAttribute("r_question", q.getProperty("question"));
 			          pageContext.setAttribute("r_answer", q.getProperty("answer"));
 			          pageContext.setAttribute("r_date", new SimpleDateFormat("yyyy-MM-dd").format(q.getProperty("date")));
+			          pageContext.setAttribute("r_solvedBy", q.getProperty("solvedBy"));
 			          %>
 			          <tr>  
 	                    <td>${fn:escapeXml(r_question)}</td>  
 	                    <td>${fn:escapeXml(r_answer)} </td>  
 	                    <td>${fn:escapeXml(r_date)}</td>  
-	                    
+	                    <td>${fn:escapeXml(r_solvedBy)}</td>
 	                  </tr>
 			          <%
 			        }

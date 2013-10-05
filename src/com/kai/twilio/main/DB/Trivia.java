@@ -30,10 +30,22 @@ public class Trivia {
 		} else {
 			currentQuestion.setPropertiesFrom(randomQuestion);
 			currentQuestion.setProperty("date", new Date());
+			currentQuestion.setProperty("solved", false);
 			Util.persistEntity(currentQuestion);
 		}
-		
 		return currentQuestion;
+	}
+	
+	public static boolean currentTriviaSolvedStatus() {
+		Entity currentTrivia = getCurrentTrivia();
+		return Boolean.parseBoolean(currentTrivia.getProperty("solved").toString());
+	}
+	
+	public static void solveCurrentTrivia(String name) {
+		Entity currentTrivia = getCurrentTrivia();
+		currentTrivia.setProperty("solved", true);
+		currentTrivia.setProperty("solvedBy", name);
+		Util.persistEntity(currentTrivia);
 	}
 	
 	public static Entity getCurrentTrivia() {
@@ -49,7 +61,7 @@ public class Trivia {
 		currentQuestion.setProperty("question", "We are out of questions today... sorry about that");
 		currentQuestion.setProperty("answer", "kai is so awesome"); //no one will ever get this!!
 		currentQuestion.setProperty("points", Integer.MAX_VALUE);
-		
+		currentQuestion.setProperty("solved", true);
 		return currentQuestion;
 	}
 	
@@ -73,6 +85,7 @@ public class Trivia {
 		questionE.setProperty("question", question);
 		questionE.setProperty("answer", answer);
 		questionE.setProperty("points", points);
+		questionE.setProperty("solved", false);
 		Util.persistEntity(questionE);
 		return questionE;
   }

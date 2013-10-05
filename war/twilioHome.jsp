@@ -28,18 +28,24 @@
 
       <div class="well">
           <%
-          Entity currentTrivia = Trivia.getCurrentTrivia();
-          pageContext.setAttribute("current_trivia_question", currentTrivia.getProperty("question"));
-          String answerString = "";
+            Entity currentTrivia = Trivia.getCurrentTrivia();
+            pageContext.setAttribute("current_trivia_question", currentTrivia.getProperty("question"));
+            String answerString = "";
 
-          Iterable<Entity> responses = Response.getAllResponses();
-          for(Entity e : responses) {
-            answerString += e.getProperty("answer").toString()+"\n";
-          }
-          if(answerString.isEmpty()) {
-            answerString = "No answer yet :(";
-          }
+            if(Trivia.currentTriviaSolvedStatus()) {
+              answerString = "Today's trivia has been solved by " + currentTrivia.getProperty("solvedBy") + ", the correct answer is: " + currentTrivia.getProperty("answer");
+            } else {
+              Iterable<Entity> responses = Response.getAllResponses();
+              for(Entity e : responses) {
+                answerString += e.getProperty("answer").toString()+", \n";
+              }
+              if(answerString.isEmpty()) {
+                answerString = "No answer yet :(";
+              }
+            }
+            
           %>
+
           <div class="p2">
             <p>${fn:escapeXml(current_trivia_question)}</p>
           </div>
