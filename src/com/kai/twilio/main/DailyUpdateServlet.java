@@ -24,9 +24,9 @@ import com.twilio.sdk.resource.instance.Message;
 
 @SuppressWarnings("serial")
 public class DailyUpdateServlet extends HttpServlet {
-	public static final String ACCOUNT_SID = "AC6c1f534804cac1c26dd1de98462b8f8b";
-    public static final String AUTH_TOKEN = "4e5764c850f0e637eab5e9e987c252a6";
-    public static final String TWILIO_NUMBER = "+12014904989";
+	public static final String ACCOUNT_SID = TwilioResponseServlet.ACCOUNT_SID;
+    public static final String AUTH_TOKEN = TwilioResponseServlet.AUTH_TOKEN;
+    public static final String TWILIO_NUMBER = TwilioResponseServlet.TWILIO_NUMBER;
     
     @Override
 	 public void doGet(HttpServletRequest req, HttpServletResponse resp)
