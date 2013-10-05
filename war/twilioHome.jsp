@@ -67,7 +67,7 @@
           <thead>  
             <tr>  
               <th>Name</th>  
-              <th>Join Date</th>  
+              <th>Member Since</th>  
               <th>Score</th> 
             </tr>  
           </thead>  

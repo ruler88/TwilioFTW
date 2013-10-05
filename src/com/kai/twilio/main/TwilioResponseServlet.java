@@ -3,6 +3,7 @@ package com.kai.twilio.main;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -70,8 +71,13 @@ public class TwilioResponseServlet extends HttpServlet {
 	 public boolean checkAnswer(String s) {
 		 Entity currentTrivia = Trivia.getCurrentTrivia();
 		 String correctAnswer = currentTrivia.getProperty("answer").toString().toLowerCase();
-		 if(correctAnswer.equals(s.toLowerCase())) {
-			 return true;
+		 StringTokenizer st = new StringTokenizer(correctAnswer, ",");
+		 s = s.toLowerCase();
+		 while(st.hasMoreTokens()) {
+			 String token = st.nextToken().trim().toLowerCase();
+			 if(s.equals(token)) {
+				 return true;
+			 }
 		 }
 		 return false;
 	 }
