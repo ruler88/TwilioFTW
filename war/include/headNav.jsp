@@ -55,6 +55,7 @@
           <ul class="nav navbar-nav">
             <li><a href="/addPlayer">New Player!</a></li>
             <li><a href="/removePlayer">Remove Player</a></li>
+            <li><a href="/playerProfile">Player Profile</a></li>
             <li><a href="/pastTrivia">Past Trivia</a></li>
           </ul>
         </div><!-- /.navbar-collapse -->

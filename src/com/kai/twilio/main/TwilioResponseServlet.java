@@ -14,6 +14,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.utils.SystemProperty;
 import com.kai.twilio.main.DB.Response;
 import com.kai.twilio.main.DB.Trivia;
 import com.kai.twilio.main.DB.User;
@@ -41,6 +42,7 @@ public class TwilioResponseServlet extends HttpServlet {
 	        	String content = request.getParameter("Body");
         		content = content.trim();
         		Trivia.storeTempResponse(content, Trivia.getCurrentQuestion(), user.getProperty("name").toString());
+        		User.addNewResponse(Trivia.getCurrentQuestion(), content, user);
 	        	if(Trivia.currentTriviaSolvedStatus()) {
 	        		message = "Sorry, today's question has already been solved by " + Trivia.getCurrentSolver() + ". " +
 	        			"The correct answer is: " + Trivia.getCurrentAnswer();
@@ -66,7 +68,12 @@ public class TwilioResponseServlet extends HttpServlet {
 	        params.add(new BasicNameValuePair("From", TWILIO_NUMBER));
 	        params.add(new BasicNameValuePair("Body", message));
 	        try {
-				Message sms = messageFactory.create(params);
+	        	if (SystemProperty.environment.value() ==
+        		    SystemProperty.Environment.Value.Production) {
+	        		Message sms = messageFactory.create(params);
+        		} else {
+        			System.out.println(params.toString());
+        		}				
 			} catch (TwilioRestException e) {
 				e.printStackTrace();
 			}

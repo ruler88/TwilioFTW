@@ -109,6 +109,20 @@ public class Util {
   	return pq.asIterable();
   }
   
+  
+  public static Iterable<Entity> listByAncestor(String kind, Entity ancestor) {
+	  Query q = new Query(kind).setAncestor(ancestor.getKey());  
+	  PreparedQuery pq = datastore.prepare(q);
+	  return pq.asIterable();
+  }
+  
+  public static Iterable<Entity> listByAncestorSorted(String kind, Entity ancestor, String sortBy) {
+	  Query q = new Query(kind).setAncestor(ancestor.getKey());
+	  q.addSort(sortBy, SortDirection.DESCENDING);
+	  PreparedQuery pq = datastore.prepare(q);
+	  return pq.asIterable();
+  }
+  
   /***
 	 * Search entities based on search criteria
 	 * @param kind

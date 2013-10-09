@@ -13,6 +13,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.utils.SystemProperty;
 import com.kai.twilio.main.DB.Trivia;
 import com.kai.twilio.main.DB.User;
 import com.twilio.sdk.TwilioRestClient;
@@ -56,7 +57,12 @@ public class DailyUpdateServlet extends HttpServlet {
             params.add(new BasicNameValuePair("From", TWILIO_NUMBER));
             params.add(new BasicNameValuePair("Body", "Today's daily trivia: " + question));
             try {
-    			Message sms = messageFactory.create(params);
+            	if (SystemProperty.environment.value() ==
+        		    SystemProperty.Environment.Value.Production) {
+            		Message sms = messageFactory.create(params);
+        		} else {
+        			System.out.println(params.toString());
+        		}
     		} catch (TwilioRestException e) {
     			e.printStackTrace();
     		}

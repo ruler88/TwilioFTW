@@ -47,7 +47,7 @@ public class User {
   }
 
   /**
-   * Get the user by name, return an Iterable
+   * Get the user by number, return an Iterable
    */
   public static Entity getUser(String number) {
 	  Iterable<Entity> tmpIte = Util.listEntities("User", "number", number);
@@ -57,6 +57,42 @@ public class User {
 		  }
 	  }
   	return null;
+  }
+  
+  /**
+   * Get the user by name, return an Iterable
+   */
+  public static Entity getUserByName(String name) {
+	  Iterable<Entity> tmpIte = getAllUsers();
+	  if(tmpIte != null && name!=null) {
+		  for(Entity e : tmpIte) {
+			  if(name.equals(e.getProperty("name").toString())) {
+				  return e;
+			  }
+		  }
+	  }
+  	return null;
+  }
+  
+  
+  
+  public static void addNewResponse(String question, String answer, Entity user) {
+	  Date currentDate = new Date();
+	  Entity userResponse = new Entity("UserResponse", currentDate.toString(), user.getKey());
+	  userResponse.setProperty("question", question);
+	  userResponse.setProperty("answer", answer);
+	  userResponse.setProperty("date",  currentDate);
+	  Util.persistEntity(userResponse);
+  }
+  
+  public static Iterable<Entity> getUserResponses(String name) {
+	  Entity user = getUserByName(name);
+	  if(null==user) {
+		  return null;
+	  }
+	  Iterable<Entity> allResponses = Util.listByAncestorSorted("UserResponse", user, "date");
+	  
+	  return allResponses;
   }
   
   /*

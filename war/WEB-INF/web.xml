@@ -24,6 +24,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
         <url-pattern>/pastTrivia</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+        <servlet-name>playerProfile</servlet-name>
+        <jsp-file>/playerProfile.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>playerProfile</servlet-name>
+        <url-pattern>/playerProfile</url-pattern>
+    </servlet-mapping>
+    
 	<servlet>
         <servlet-name>addPlayer</servlet-name>
         <servlet-class>com.kai.twilio.main.TwilioFTWServlet</servlet-class>
