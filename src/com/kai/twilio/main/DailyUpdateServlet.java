@@ -49,6 +49,7 @@ public class DailyUpdateServlet extends HttpServlet {
         
         for(Entity user : allPlayers) {
         	number = user.getProperty("number").toString();
+        	System.out.println(number);
         	
         	List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("To", number));

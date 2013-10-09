@@ -34,13 +34,17 @@ public class TwilioResponseServlet extends HttpServlet {
 	        String fromNumber = request.getParameter("From");
 	        Entity user = User.getUser(fromNumber);
 	        String message = "";
+	        
 	        if(user==null) {
 	        	message = "Number not found! Sign up at magicianp0424.appspot.com/addPlayer";
 	        } else {
+	        	String content = request.getParameter("Body");
+        		content = content.trim();
+        		Trivia.storeTempResponse(content, Trivia.getCurrentQuestion(), user.getProperty("name").toString());
 	        	if(Trivia.currentTriviaSolvedStatus()) {
-	        		message = "Sorry, today's question has already been solved!";
+	        		message = "Sorry, today's question has already been solved by " + Trivia.getCurrentSolver() + ". " +
+	        			"The correct answer is: " + Trivia.getCurrentAnswer();
 	        	} else {
-	        		String content = request.getParameter("Body");
 		        	Response.addResponse(content);
 		        	if(checkAnswer(content)) {
 		        		message = "You are boss " + user.getProperty("name") + "! \"" + content + "\" is correct!";
@@ -69,8 +73,7 @@ public class TwilioResponseServlet extends HttpServlet {
 	 }
   
 	 public boolean checkAnswer(String s) {
-		 Entity currentTrivia = Trivia.getCurrentTrivia();
-		 String correctAnswer = currentTrivia.getProperty("answer").toString().toLowerCase();
+		 String correctAnswer = Trivia.getCurrentAnswer();
 		 StringTokenizer st = new StringTokenizer(correctAnswer, ",");
 		 s = s.toLowerCase();
 		 while(st.hasMoreTokens()) {

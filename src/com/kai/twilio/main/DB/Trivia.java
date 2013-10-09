@@ -41,6 +41,21 @@ public class Trivia {
 		return Boolean.parseBoolean(currentTrivia.getProperty("solved").toString());
 	}
 	
+	public static String getCurrentSolver() {
+		Entity currentTrivia = getCurrentTrivia();
+		return currentTrivia.getProperty("solvedBy").toString();
+	}
+	
+	public static String getCurrentAnswer() {
+		Entity currentTrivia = getCurrentTrivia();
+		return currentTrivia.getProperty("answer").toString();
+	}
+	
+	public static String getCurrentQuestion() {
+		Entity currentTrivia = getCurrentTrivia();
+		return currentTrivia.getProperty("question").toString();
+	}
+	
 	public static void solveCurrentTrivia(String name) {
 		Entity currentTrivia = getCurrentTrivia();
 		currentTrivia.setProperty("solved", true);
@@ -119,5 +134,14 @@ public class Trivia {
       return("User deleted successfully.");
     } else
       return("User not found");      
+  }
+  
+  //this is a temporary QA system, remove later!
+  public static void storeTempResponse(String response, String question, String name) {
+	  Entity tmpResponse = new Entity("TmpResponse");
+	  tmpResponse.setProperty("name", name);
+	  tmpResponse.setProperty("response", response);
+	  tmpResponse.setProperty("question", question);
+	  Util.persistEntity(tmpResponse);
   }
 }

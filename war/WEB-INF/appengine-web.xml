@@ -17,6 +17,7 @@
 	 <include path="css/bootstrap.css" />
 	 <include path="js/*" />
 	 <include path="fonts/*" />
+	 <include path="/favicon.ico" />
   </static-files>
 
   <!--

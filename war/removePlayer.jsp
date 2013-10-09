@@ -38,6 +38,12 @@
       
     </form>
 
+    <div class="container">
+      <span class="label label-warning alert-pad">Warning</span>
+      <div class="alert alert-warning alert-pad">
+        <p>Please don't remove other players!!!!</p>
+      </div>
+    </div>
     
   </body>
 </html>
